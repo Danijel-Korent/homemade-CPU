@@ -1227,7 +1227,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="facing" val="north"/>
     </comp>
     <comp lib="4" loc="(920,490)" name="RAM"/>
-    <comp lib="5" loc="(3060,500)" name="TTY"/>
+    <comp lib="5" loc="(3060,500)" name="TTY">
+      <a name="rows" val="16"/>
+    </comp>
     <comp lib="1" loc="(1370,1600)" name="OR Gate">
       <a name="facing" val="north"/>
     </comp>
@@ -1577,13 +1579,27 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="4" loc="(450,510)" name="ROM">
       <a name="dataWidth" val="12"/>
       <a name="contents">addr/data: 8 12
-705 905 c00 904 b00 904 c00 0
-6a 20 64 65 63 6b 69 6d
-61 20 64 6f 6e 65 73 69
-20 6a 6f 73 20 6a 65 64
-6e 75 20 72 75 6e 64 75
-20 6b 61 72 6c 6f 76 61
-63 6b 6f 67 a a 100 a00
+101 57 65 6c 63 6f 6d 65
+20 74 6f 20 74 68 65 20
+55 73 65 6c 65 73 73 4f
+53 20 76 37 2e 33 0 a
+100 700 500 0 101 a a 53
+68 65 6c 6c 3a 3e 20 0
+100 200 901 c31 300 102 100 600
+101 100 501 400 900 c40 401 500
+401 90a c31 400 90a b21 968 b6d
+0 101 a 49 27 6d 20 61
+66 72 61 69 64 20 49 20
+63 61 6e 27 74 20 64 6f
+20 74 68 61 74 2c 20 44
+61 76 65 100 a21 0 101 a
+41 76 61 69 6c 61 62 6c
+65 20 63 6f 6d 6d 61 6e
+64 73 3a a a 20 20 20
+68 65 6c 70 20 2d 20 70
+72 69 6e 74 73 20 74 68
+69 73 20 6d 65 73 73 61
+67 65 100 a21 a21
 </a>
     </comp>
     <comp lib="0" loc="(2700,500)" name="Splitter">
