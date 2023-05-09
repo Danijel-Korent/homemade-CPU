@@ -5,6 +5,8 @@
 
 from enum import Enum
 from collections import namedtuple
+import argparse
+
 
 class OperandType(Enum):
     REG_A = "a"
@@ -141,6 +143,20 @@ def disassemble_file(input_file_name, output_file_name):
                         return
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="A disassembler for a custom CPU ISA.")
+    parser.add_argument("input_file", nargs='?', default="useless_OS.hex", help="The input file name containing the hex code to be disassembled. (default: %(default)s)")
+    parser.add_argument("-o", "--output_file", help="The output file name where the disassembled code will be written.")
+    #parser.add_argument("-d", "--disassembler_mode", action="store_true", help="Enable disassembler")
+
+    args = parser.parse_args()
+
+    if args.output_file is None:
+        args.output_file = args.input_file.split(".")[0] + ".asm"
+
+    return args
+
+
 if __name__ == '__main__':
 
     # Print the table in a formatted way
@@ -149,10 +165,9 @@ if __name__ == '__main__':
     for entry in instruction_table:
         print(f"{entry.instruction_opcode:>17x} | {entry.instruction_name:<15} | {entry.operand1_type.value:<13} | {entry.operand2_type.value}")
 
-    # TODO: Get the file name from the command line
-    # TODO: Temp hardcoded, just for testing
-    #       remove this after development ends
-    input_file_name  = "useless_OS.hex"
-    output_file_name = "useless_OS.asm"
+    args = parse_arguments()
 
-    disassemble_file(input_file_name, output_file_name)
+    disassemble_file(args.input_file, args.output_file)
+
+    #if args.disassembler_mode:
+    #    print("disassembler mode")
