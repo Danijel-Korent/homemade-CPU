@@ -30,7 +30,7 @@ instruction_table = [
     InstructionRow(0x05, "mov", OperandType.RAM_ADDRESS, OperandType.REG_A),
     InstructionRow(0x06, "mov", OperandType.REG_OUT_1, OperandType.REG_A),
     InstructionRow(0x07, "mov", OperandType.REG_A, OperandType.IMMEDIATE_VAL),
-    InstructionRow(0x08, "and", OperandType.REG_A, OperandType.IMMEDIATE_VAL),
+    InstructionRow(0x08, "nand", OperandType.REG_A, OperandType.IMMEDIATE_VAL),
     InstructionRow(0x09, "cmp", OperandType.REG_A, OperandType.IMMEDIATE_VAL),
     InstructionRow(0x0A, "jmp", OperandType.ROM_ADDRESS, OperandType.NONE),
     InstructionRow(0x0B, "je",  OperandType.ROM_ADDRESS, OperandType.NONE),
