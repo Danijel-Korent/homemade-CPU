@@ -38,14 +38,14 @@ instruction_table = [
 ]
 
 
-def find_instruction_by_opcode(opcode):
+def find_instruction_type_by_opcode(opcode):
     for instruction in instruction_table:
         if instruction.instruction_opcode == opcode:
             return instruction
     return None
 
 
-def operand_to_string(operand_type, operand_val):
+def convert_operand_to_string(operand_type, operand_val):
     string = ""
 
     operand_hex_val = hex(operand_val)
@@ -80,7 +80,7 @@ def operand_to_string(operand_type, operand_val):
 
 
 # TODO: Add type hints
-def instruction_to_asm_string(instruction):
+def convert_instruction_byte_to_asm_string(instruction):
 
     asm = ""
 
@@ -92,10 +92,10 @@ def instruction_to_asm_string(instruction):
     #print(f"OPERAND: {hex(operand)}")
     #print(f"OPCODE:  {hex(opcode)}")
 
-    instruction = find_instruction_by_opcode(opcode)
+    instruction = find_instruction_type_by_opcode(opcode)
 
-    operand_1_str = operand_to_string(instruction.operand1_type, operand)
-    operand_2_str = operand_to_string(instruction.operand2_type, operand)
+    operand_1_str = convert_operand_to_string(instruction.operand1_type, operand)
+    operand_2_str = convert_operand_to_string(instruction.operand2_type, operand)
 
     #print(f"Instruction: {instruction.instruction_opcode} {instruction.instruction_name}")
     asm = f"{instruction.instruction_name} {operand_1_str}"
@@ -114,12 +114,7 @@ def instruction_to_asm_string(instruction):
 #       processing stage (turning array of integer values into array of instruction structs)
 #       and outputing stage (turning array of instruction strucs into a file) the code will
 #       be easier to read, easier to understand and probably even simpler
-def parse_file(input_file_name):
-
-    # TODO: Temp hardcoded, just for testing
-    #       remove this after development ends
-    input_file_name  = "useless_OS.hex"
-    output_file_name = "useless_OS.asm"
+def disassemble_file(input_file_name, output_file_name):
 
     with open(input_file_name, "r") as input_file:
         first_line = input_file.readline().strip()
@@ -128,7 +123,7 @@ def parse_file(input_file_name):
             print("Wrong format!!")
             return
 
-        with open(output_file_name, "w") as output_file:
+        with open(output_file_name, "w", newline='\n') as output_file:
 
             address = 0
 
@@ -138,7 +133,7 @@ def parse_file(input_file_name):
                 for hex_number in hex_numbers:
                     try:
                         decimal_number = int(hex_number, 16)
-                        asm = instruction_to_asm_string(decimal_number)
+                        asm = convert_instruction_byte_to_asm_string(decimal_number)
                         output_file.write(f"{hex(address)}: {asm} \n")
                         address += 1
                     except ValueError:
@@ -155,4 +150,9 @@ if __name__ == '__main__':
         print(f"{entry.instruction_opcode:>17x} | {entry.instruction_name:<15} | {entry.operand1_type.value:<13} | {entry.operand2_type.value}")
 
     # TODO: Get the file name from the command line
-    parse_file(None)
+    # TODO: Temp hardcoded, just for testing
+    #       remove this after development ends
+    input_file_name  = "useless_OS.hex"
+    output_file_name = "useless_OS.asm"
+
+    disassemble_file(input_file_name, output_file_name)
