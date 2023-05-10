@@ -38,9 +38,16 @@ instruction_table = [
 ]
 
 
-def find_instruction_type_by_opcode(opcode):
+def find_instruction_type_by_opcode(opcode, op1, op2):
     for instruction in instruction_table:
-        if instruction.instruction_opcode == opcode:
+        if instruction.instruction_opcode == opcode and instruction.operand1_type == op1 and instruction.operand2_type == op2:
+            return instruction
+    return None
+
+
+def find_instruction_type_by_name_and_operands(name, operand1, operand2):
+    for instruction in instruction_table:
+        if instruction.instruction_name == name and instruction.operand1_type == operand1 and instruction.operand2_type == operand2:
             return instruction
     return None
 
@@ -107,6 +114,83 @@ def convert_instruction_byte_to_asm_string(instruction):
     return asm
 
 
+def run_assembler(input_file_name, output_file_name):
+    asm_list = []
+
+    with open(input_file_name, "r") as input_file:
+
+        for line in input_file:
+            print("Line: ", line)
+
+            line = line.strip()
+            asm = line.split()
+
+            if line[0] == '0':
+                asm = line.split()[1:]
+
+            asm_list.append(asm)
+            print("Asm: ", asm)
+
+    opcodes = []
+
+    for asm in asm_list:
+        asm_name = asm[0]
+        operand1_type = None
+        operand2_type = None
+        literal = 0
+
+        def find_operand_type(operand, asm_name):
+
+            operand_type = None
+
+            if operand == "":
+                pass
+
+            if operand == OperandType.REG_A.value:
+                operand_type = OperandType.REG_A
+            elif operand == OperandType.REG_OUT_1.value:
+                operand_type = OperandType.REG_OUT_1
+            elif operand == OperandType.REG_OUT_2.value:
+                operand_type = OperandType.REG_OUT_2
+            elif operand == OperandType.REG_IN_1.value:
+                operand_type = OperandType.REG_IN_1
+            elif operand == OperandType.REG_IN_2.value:
+                operand_type = OperandType.REG_IN_2
+            else:
+                if operand[0] == "[":
+                    operand_type = OperandType.RAM_ADDRESS
+                # TODO: Refactor this dirty hack into something nice
+                elif asm_name[0] == "j":
+                    operand_type = OperandType.ROM_ADDRESS
+                else:
+                    operand_type = OperandType.IMMEDIATE_VAL
+
+            return operand_type
+
+        operand1_type = find_operand_type(asm[1], asm_name)
+
+        if len(asm) > 2:
+            operand2_type = find_operand_type(asm[2], asm_name)
+
+        if operand1_type == OperandType.IMMEDIATE_VAL or operand1_type == OperandType.RAM_ADDRESS or operand1_type == OperandType.RAM_ADDRESS:
+            literal = int(asm[1])
+
+        if operand2_type == OperandType.IMMEDIATE_VAL or operand2_type == OperandType.RAM_ADDRESS or operand2_type == OperandType.RAM_ADDRESS:
+            literal = int(asm[2])
+
+        instruction = find_instruction_type_by_name_and_operands(asm_name, operand1_type, operand2_type)
+
+        instruction_opcode = instruction.instruction_opcode.val
+
+        instruction_opcode += literal
+
+        opcodes.append(instruction_opcode)
+
+        with open(output_file_name, "wb") as output_file:
+            for opcode in opcodes:
+                output_file.write(opcode)
+
+
 # TODO: Not a good name anymore as this is now parsing data from input file,
 #       processing the data and writing the result into the output file
 #
@@ -155,4 +239,5 @@ if __name__ == '__main__':
     input_file_name  = "useless_OS.hex"
     output_file_name = "useless_OS.asm"
 
-    disassemble_file(input_file_name, output_file_name)
+    #disassemble_file(input_file_name, output_file_name)
+    run_assembler("useless_OS.asm", "assembler_test.hex")
