@@ -141,6 +141,9 @@ def run_assembler(input_file_name, output_file_name):
 
         def find_operand_type(operand, asm_name):
 
+            # TODO: A hack. Must be solved in the upper layers
+            operand = operand.split(",")[0]
+
             operand_type = None
 
             if operand == "":
@@ -173,22 +176,30 @@ def run_assembler(input_file_name, output_file_name):
             operand2_type = find_operand_type(asm[2], asm_name)
 
         if operand1_type == OperandType.IMMEDIATE_VAL or operand1_type == OperandType.RAM_ADDRESS or operand1_type == OperandType.RAM_ADDRESS:
-            literal = int(asm[1])
+            val = asm[1]
+            # TODO: A hack that needs to be solved in upper layers
+            if val[0] == "[":
+                val = val[1:-2]
+            literal = int(val, 16)
 
         if operand2_type == OperandType.IMMEDIATE_VAL or operand2_type == OperandType.RAM_ADDRESS or operand2_type == OperandType.RAM_ADDRESS:
-            literal = int(asm[2])
+            val = asm[2]
+            # TODO: A hack that needs to be solved in upper layers
+            if val[0] == "[":
+                val = val[1:-2]
+            literal = int(val, 16)
 
         instruction = find_instruction_type_by_name_and_operands(asm_name, operand1_type, operand2_type)
 
-        instruction_opcode = instruction.instruction_opcode.val
+        instruction_opcode = instruction.instruction_opcode
 
         instruction_opcode += literal
 
         opcodes.append(instruction_opcode)
 
-        with open(output_file_name, "wb") as output_file:
-            for opcode in opcodes:
-                output_file.write(opcode)
+    with open(output_file_name, "wb") as output_file:
+        for opcode in opcodes:
+            output_file.write(bytes(opcode))
 
 
 # TODO: Not a good name anymore as this is now parsing data from input file,
