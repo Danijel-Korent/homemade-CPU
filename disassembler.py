@@ -135,8 +135,8 @@ def run_assembler(input_file_name, output_file_name):
 
     for asm in asm_list:
         asm_name = asm[0]
-        operand1_type = None
-        operand2_type = None
+        operand1_type = OperandType.NONE
+        operand2_type = OperandType.NONE
         literal = 0
 
         def find_operand_type(operand, asm_name):
@@ -144,7 +144,7 @@ def run_assembler(input_file_name, output_file_name):
             # TODO: A hack. Must be solved in the upper layers
             operand = operand.split(",")[0]
 
-            operand_type = None
+            operand_type = OperandType.NONE
 
             if operand == "":
                 pass
@@ -186,20 +186,27 @@ def run_assembler(input_file_name, output_file_name):
             val = asm[2]
             # TODO: A hack that needs to be solved in upper layers
             if val[0] == "[":
-                val = val[1:-2]
+                val = val[1:-1]
             literal = int(val, 16)
 
         instruction = find_instruction_type_by_name_and_operands(asm_name, operand1_type, operand2_type)
 
-        instruction_opcode = instruction.instruction_opcode
+        instruction_opcode = instruction.instruction_opcode << 8
 
         instruction_opcode += literal
 
         opcodes.append(instruction_opcode)
+        #print("Added opcode: ", instruction_opcode)
 
-    with open(output_file_name, "wb") as output_file:
-        for opcode in opcodes:
-            output_file.write(bytes(opcode))
+    with open(output_file_name, "w") as output_file:
+        for i, opcode in enumerate(opcodes):
+            opcode_hex = hex(opcode)[2:]
+            print("Writing opcode: ", opcode_hex)
+            #output_file.write(bytes(opcode))
+            output_file.write(opcode_hex + " ")
+
+            if i % 8 == 0:
+                output_file.write("\n")
 
 
 # TODO: Not a good name anymore as this is now parsing data from input file,
