@@ -1,7 +1,7 @@
 # homemade-CPU
 Designed a CPU for fun (and to learn by doing it)
 
-This is an 8-bit CPU, but my goal is to eventually implement RISC-V RV32I CPU. I'm also developing an OS for it. Why am I doing this? I really like to know how all this stuff works, and I've noticed that "learning by doing" is (at least for me) the best way to truly understand something. So when I want to know how something works, I recreate it.
+This is an 8-bit CPU, but my goal is to eventually implement RISC-V RV32I CPU. I'm also developing an OS for those later bigger CPU designs. Why am I doing this? I really like to know how all this stuff works, and I've noticed that "learning by doing" is (at least for me) the best way to truly understand something. So when I want to know how something works, I recreate it.
 
 **Current state**:  
 It's fully implemented and connected to the virtual TTY and keyboard. With a shell-like joke program hardcoded into the ROM.
